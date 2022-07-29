@@ -26,19 +26,27 @@ services:
 
   # Collector
   otelcol:
-    image: otel/opentelemetry-collector:0.56.0
-    container_name: otel-col
-    command: [ "--config=/etc/otelcol-config.yml" ]
+    image: ghcr.io/fluent/fluent-bit/master:x86_64
     volumes:
-      - ./src/otelcollector/otelcol-config.yml:/etc/otelcol-config.yml
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
     ports:
-      - "4317"
-      - "4318"
-      - "9464"
-      - "8888:8888"
+      - "2020:2020"
+      - "2021:2021"
+    # image: otel/opentelemetry-collector:0.56.0
+    # container_name: otel-col
+    # command: [ "--config=/etc/otelcol-config.yml" ]
+    # volumes:
+    #   - ./src/otelcollector/otelcol-config.yml:/etc/otelcol-config.yml
+    # ports:
+    #   - "4317"
+    #   - "4318"
+    #   - "9464"
+    #   - "8888:8888"
     depends_on:
       - jaeger
-    logging: *logging
+    # logging: *logging
 
   # Redis
   redis-cart:
